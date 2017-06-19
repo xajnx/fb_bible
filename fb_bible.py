@@ -16,6 +16,8 @@ token = keys['personal']
 
 graph = facebook.GraphAPI(access_token=token)
 
+''' The KJV books of the Bible can be found here: https://github.com/brendancol/king-json-bible'''
+
 bible = ['Genesis', 'Exodus', 'Lev', 'Num', 'Deut', 'Joshua', 'Judges',
          'Ruth', '1Sam', '2Sam', '1Kings', '2Kings', '1Chron', '2Chron',
          'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs', 'Eccl',
