@@ -5,7 +5,10 @@ import os
 import pause
 import facebook
 
-#set variables
+''' Print strings are for testing purposes '''
+
+# set variables
+
 home = os.environ['HOME']
 work = home + '/scripts/python/fb_bible/'
 bible_dir = work + 'KJVJson/'
@@ -44,60 +47,49 @@ def fb_bible():
                 verse_str = text + ' - ' + book + str(chap) + ':' + str(verse)
                 log_str = {'book': book, 'start': n}
                 graph.put_object(parent_object='me', connection_name='feed', message=verse_str)
+                # print(verse_str)
 
                 with open(bible_log, 'w+') as log:
                     log.write(json.dumps(log_str))
                 pause.hours(1)
 
-    elif os.path.exists(bible_log) == True:
+    elif os.path.exists(bible_log):
         with open(bible_log, 'r') as log:
-            data = eval(log.read())
-        book = data['book']
-        start = data['start']
-        get = bible_dir + book + '.json'
-        with open(get, 'r') as f:
-            data = json.load(f)
+            last_v = eval(log.read())
+        
+        for n in range(len(bible)):
+           if bible[n] == last_v['book']:
+               start = n
+           else:
+               pass
+ 
+        for n in range(start, len(bible)):
+            with open(bible_dir + bible[n] + '.json', 'r') as f:
+                data = json.load(f)  
+                
+            last_verse = last_v['start']    
+            num_verse = len(data['verses']) - 1 
+            if last_verse > num_verse:
+                last_verse = 0               
+            for i in range(last_verse, num_verse):
+                verse = data['verses'][i]['verse']
+                chap = data['verses'][i]['chapter']
+                text = data['verses'][i]['text']
+                verse_str = text + ' - ' + bible[n] + str(chap) + ':' + str(verse)
+                log_str = {'book': bible[n], 'start': i}
+                graph.put_object(parent_object='me', connection_name='feed', message=verse_str)
+                # print(verse_str)
 
-        num_verse = len(data['verses']) - 1
-        for n in range(start, num_verse):
-            verse = data['verses'][n]['verse']
-            chap = data['verses'][n]['chapter']
-            text = data['verses'][n]['text']
-            verse_str = text + ' - ' + book + str(chap) + ':' + str(verse)
-            log_str = {'book':book, 'start': n}
-            graph.put_object(parent_object='me', connection_name='feed', message=verse_str)
-
-            with open(bible_log, 'w+') as log:
-                log.write(json.dumps(log_str))
-            pause.hours(1)
+                with open(bible_log, 'w+') as log:
+                    log.write(json.dumps(log_str))
+                pause.hours(1)
 
 
 if __name__ == '__main__':
-
-    fb_bible()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    try:
+        fb_bible()
+    except Exception as e:
+        with open('error.log', 'w+') as f:
+            f.write('An error has occured: {}'.format(str(e)))
 
 
