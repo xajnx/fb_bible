@@ -14,6 +14,11 @@ work = home + '/scripts/python/fb_bible/'
 bible_dir = work + 'KJVJson/'
 bible_log = work + 'last.log'
 
+'''
+   API keys are held in a text file called apikeys in your scripts directory
+   in dictionary format: 
+   {'keys':{'personal' : 'XXXXXXXXXXXXXXXXXXXXXX'}} 
+'''
 with open(home + '/scripts/python/apikeys', 'r') as f:
     keys = eval(f.read())
 
